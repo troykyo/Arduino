@@ -1,0 +1,353 @@
+/*---------------
+ Jump Jacket
+ Troy Nachtigall
+ www.troykyo.com
+ ---------------*/
+
+#include <Wire.h>
+#include "nunchuck_funcs.h"
+
+byte xjoy,yjoy,accx,accy,accz,zbut,cbut; //wimote variables
+byte rowmap,rowmin,rowmax,colmap,colmin,colmax; //control variables 
+byte xjoyLast,yjoyLast,accxLast,accyLast,acczLast,zbutLast,cbutLast; //more control variables
+byte xjoyDefault,yjoyDefault; //even more control variables
+byte yjoyArray [9];
+byte accxLastArray [9];
+byte accyLastArray [9];
+byte acczLastArray [9];
+
+int flash = 10; //controls the blink speed
+int x = 5;
+int y = 5;
+int thisRow = 0;
+int thisCol = 0;
+unsigned long   timeDisplay = 0; //counter for the amount of time with no movement.
+const int col[8] = { // 2-dimensional array of row pin numbers:
+  6,11,10,3,14,4,8,9 };
+const int row[5] = { // 2-dimensional array of column pin numbers
+  2,7,12,5,13 };
+int pixels[8][8]; // 2-dimensional array of pixels:         
+
+
+void setup() {
+  Serial.begin(9600);
+  nunchuck_setpowerpins();//analog 2 and 3 become power
+  nunchuck_init(); // send the initilization handshake
+  xjoyLast = -50; //reset Display Variables
+  yjoyLast = -50;
+  accxLast = -50;
+  accyLast = -50;
+  acczLast = -50;
+  zbutLast = 0;
+  cbutLast =0;
+
+  delay (500); // wait before getting joystick defaults
+  nunchuck_get_data(); //reads nunchuck
+  xjoyDefault = nunchuck_joyx();//Sets WiiChuck Joystick Defaults
+  yjoyDefault = nunchuck_joyy();
+
+  // iterate over the pins:
+  for (int thisPin = 0; thisPin < 8; thisPin++) {
+    // initialize the output pins:
+    pinMode(col[thisPin], OUTPUT);
+    // take the col pins (i.e. the cathodes) high to ensure that
+    // the LEDS are on:
+    digitalWrite(col[thisPin], LOW);    
+  }
+  for (int thisPin = 0; thisPin < 5; thisPin++) {
+    pinMode(row[thisPin], OUTPUT);  
+  }
+  // initialize the pixel matrix:
+  for (int x = 0; x < 5; x++) {
+    for (int y = 0; y < 8; y++) {
+      pixels[x][y] = LOW;
+    }
+  }
+  Serial.println("GO!");
+}
+
+void loop() {
+  // read input:
+  readSensors();
+
+  // draw the screen
+  // if ((abs(accyLast-accy))>20) //Has the wimote moved?
+  if (accy>110)//if the Wii chuck is in hand.  DEBUG THIS!!!!
+    timeDisplay = millis();
+  if ((millis()-timeDisplay) > 10000)//||(xjoy>(xjoyDefault+30))||(xjoy<(xjoyDefault-30))||(yjoy>(yjoyDefault+30))||(yjoy<(yjoyDefault-30)))//if time has expired, or the oy stick is depressed, Blink Default
+      blinkme(); //Display Mode and Joystick mode (needs to be seperated)
+  else
+    refreshScreen(); //accelerometer controlled jacket
+
+}
+
+void readSensors() {
+reread:
+  nunchuck_get_data(); //reads nunchuck
+  accx  = nunchuck_accelx(); // ranges from approx 70 - 182
+  accy  = nunchuck_accely(); // ranges from approx 80 - 200
+  accz  = nunchuck_accelz(); // ranges from approx 78 - 200
+  zbut = nunchuck_zbutton();
+  cbut = nunchuck_cbutton(); 
+  xjoy = nunchuck_joyx();
+  yjoy = nunchuck_joyy();
+
+  flash = map((abs(accx-126)), 1, 70, 20, 1); //Set flash delay based upon x axis rotation
+  if (zbut == 1)//stop program
+    fullreset();
+  while (cbut == 1)//blink 
+    blinkme();
+  if (flash<1)
+    flash = 1;
+
+  Serial.print("accx: "); 
+  Serial.print((byte)accx,DEC);
+  Serial.print("\taccy: "); 
+  Serial.print((byte)accy,DEC);
+  Serial.print("\taccz: "); 
+  Serial.print((byte)accz,DEC);
+  Serial.print("\tzbut: "); 
+  Serial.print((byte)zbut,DEC);
+  Serial.print("\tcbut: "); 
+  Serial.print((byte)cbut,DEC);
+  Serial.print("\txjoy: "); 
+  Serial.print((byte)xjoy,DEC);
+  Serial.print("\tyjoy: "); 
+  Serial.print((byte)yjoy,DEC);
+
+  // turn off the last position:
+  //pixels[x][y] = HIGH;
+  // read the sensors for X and Y values:
+  // time = millis();
+  // x = (time/1000)%8;
+  // y = (time/1000)%8;
+  // set the new pixel position low so that the LED will turn on
+  // in the next screen refresh:
+  //pixels[x][y] = LOW;
+  //Serial.print (x);
+  //Serial.print (" ");
+  //Serial.println (y);*/
+}
+
+void refreshScreen() {
+  rowmap = map(accy,80,200,0,5); // acelerometer mapping
+  colmap = map(accx,70,190,-4,4);
+  rowmin = 0;
+  rowmax = 7,
+  colmin = 0;
+  colmax = 7;
+  if (rowmap > 0 && rowmap < 3){  //if tilted forward set min 
+    rowmin = rowmap;
+    rowmax = 5;
+  }
+  if (rowmap > 2 && rowmap < 6){//if tilted forward set max
+    rowmax = rowmap;
+    colmin = 0;
+  }
+  if (accx < 90){
+    colmin = 0; 
+    colmax = 3;
+  }
+  if (accx > 144){
+    colmin = 4; 
+    colmax = 8;
+  } 
+
+  Serial.print("\trowmap: "); 
+  Serial.print((byte)rowmap,DEC);
+  Serial.print("\tcolmap: "); 
+  Serial.print((byte)colmap,DEC);
+  Serial.print("\tRowMin: "); 
+  Serial.print((byte)rowmin,DEC);
+  Serial.print("\tRowMax: "); 
+  Serial.print((byte)rowmax,DEC);
+  Serial.print("\tColMin: "); 
+  Serial.print((byte)colmin,DEC);
+  Serial.print("\tColMax: "); 
+  Serial.print((byte)colmax,DEC);
+
+  if (yjoy > 200 || accz > 150 ) // if joy is presed forward scroll down
+    scrollDown();
+  else 
+    scrollUp();
+  accxLast = accx;
+  accyLast = accy;
+  acczLast = accz;
+}
+
+void scrollDown(){
+  // iterate over the rows (anodes):
+  for (thisRow = rowmin; thisRow < rowmax; thisRow++) {
+    // take the row pin (anode) high:
+    digitalWrite(row[thisRow], LOW);
+    // iterate over the cols (cathodes):
+    if (accx < 112)
+      scrollLeft();
+    else
+      scrollRight();
+  } 
+}
+
+void scrollUp(){
+  // iterate over the rows (anodes):
+  for (thisRow = rowmax; thisRow >= rowmin; thisRow--) {
+    // take the row pin (anode) high:
+    digitalWrite(row[thisRow], LOW);
+    // iterate over the cols (cathodes):
+    if (accx < 112)
+      scrollLeft();
+    else
+      scrollRight();
+  } 
+}  
+
+void scrollLeft() {  
+  for (thisCol = colmin; thisCol < colmax; thisCol++) {
+    // get the state of the current pixel;
+    int thisPixel = pixels[thisRow][thisCol];
+    // when the row is HIGH and the col is LOW,
+    // the LED where they meet turns on:
+    // Serial.println (thisPixel);
+    digitalWrite(col[thisCol], thisPixel);
+    // turn the pixel off:
+    //if (thisPixel == LOW) {
+    //digitalWrite(col[thisCol], HIGH);
+    //}
+    delay(flash);
+  }
+  // take the row pin low to turn off the whole row:
+  digitalWrite(row[thisRow], HIGH);
+}
+
+void scrollRight(){  
+  for (thisCol = colmax; thisCol >= colmin; thisCol--) {
+    // get the state of the current pixel;
+    int thisPixel = pixels[thisRow][thisCol];
+    // when the row is HIGH and the col is LOW,
+    // the LED where they meet turns on:
+    // Serial.println (thisPixel);
+    digitalWrite(col[thisCol], thisPixel);
+    // turn the pixel off:
+    //if (thisPixel == LOW) {
+    //digitalWrite(col[thisCol], HIGH);
+    //}
+    delay(flash);
+  }
+  // take the row pin low to turn off the whole row:
+  digitalWrite(row[thisRow], HIGH);
+} 
+
+void blinkme() {  
+  //add joystick controll here. 
+
+  if ((xjoy>(xjoyDefault+30))||(xjoy<(xjoyDefault-30))){
+    rowmin=(map(xjoy,0,256,0,7));
+    rowmax=(map(xjoy,0,256,0,7));
+  }
+  else{
+    rowmin = random(0,7);
+    rowmax= random(colmin,7);
+  }
+  if ((yjoy>(yjoyDefault+30))||(yjoy<(yjoyDefault-30))){
+    colmin=(map(yjoy,0,256,0,7));
+    colmax=(map(yjoy,0,256,0,7));
+  }
+
+  else{ 
+    colmin = random(0,7);
+    colmax= random(colmin,7);
+  }
+
+  flash = random(1,100);
+  for (thisCol = colmin; thisCol < colmax; thisCol++) {
+    // get the state of the current pixel;
+    int thisPixel = pixels[thisRow][thisCol];
+    // when the row is HIGH and the col is LOW,
+    // the LED where they meet turns on:
+    // Serial.println (thisPixel);
+    digitalWrite(col[thisCol], thisPixel);
+    // turn the pixel off:
+    //if (thisPixel == LOW) {
+    //digitalWrite(col[thisCol], HIGH);
+    //}
+    if (accx < 112)
+      scrollLeft();
+    else
+      scrollRight();
+
+    delay(flash);
+  }
+  // take the row pin low to turn off the whole row:
+  digitalWrite(row[thisRow], HIGH);
+}
+
+void fullreset() {  
+  nunchuck_init(); // send the initilization handshake
+  // iterate over the pins:
+  for (int thisPin = 0; thisPin < 8; thisPin++) {
+    // initialize the output pins:
+    pinMode(col[thisPin], OUTPUT);
+    // take the col pins (i.e. the cathodes) high to ensure that
+    // the LEDS are on:
+    digitalWrite(col[thisPin], LOW);    
+  }
+  for (int thisPin = 0; thisPin < 5; thisPin++) {
+    pinMode(row[thisPin], OUTPUT);  
+  }
+  // initialize the pixel matrix:
+  for (int x = 0; x < 5; x++) {
+    for (int y = 0; y < 8; y++) {
+      pixels[x][y] = LOW;
+    }
+  }
+  Serial.println("GO!");
+}
+
+/*
+
+ -  This code is based upon the following code.  Thanks to all who came before.-
+ 
+ * Nunchuck functions  -- Talk to a Wii Nunchuck
+ *
+ * This library is from the Bionic Arduino course : 
+ *                          http://todbot.com/blog/bionicarduino/
+ *
+ * 2007 Tod E. Kurt, http://todbot.com/blog/
+ *
+ * The Wii Nunchuck reading code originally from Windmeadow Labs
+ *   http://www.windmeadow.com/node/42
+ 
+ 
+ Row-Column Scanning an 8x8 LED matrix with X-Y input
+ 
+ This example controls an 8x8 LED matrix using two analog inputs
+ 
+ created 27 May 2009
+ modified 4 Sep 2010
+ by Tom Igoe
+ 
+ This example works for the Lumex  LDM-24488NI Matrix. See
+ http://sigma.octopart.com/140413/datasheet/Lumex-LDM-24488NI.pdf
+ for the pin connections
+ 
+ For other LED cathode column matrixes, you should only need to change
+ the pin numbers in the row[] and column[] arrays
+ 
+ rows are the anodes
+ cols are the cathodes
+ ---------
+ 
+ Pin numbers:
+ Matrix:
+ * Digital pins 2 through 13,
+ * analog pins 2 through 5 used as digital 16 through 19
+ Potentiometers:
+ * center pins are attached to analog pins 0 and 1, respectively
+ * side pins attached to +5V and ground, respectively.
+ 
+ This code is in the public domain.
+ See that base by Tom Igoe at 
+ http://www.arduino.cc/en/Tutorial/RowColumnScanning
+ */
+
+

@@ -1,0 +1,139 @@
+// !$*UTF8*$!
+{
+	14A7BF900E12FF0200A765A7 /* Default.png */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{61, 423}, {750, 558}}";
+		};
+	};
+	14B705100DC7A259004D008D /* ReadMe.txt */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {2316, 1148}}";
+			sepNavSelRange = "{1533, 0}";
+			sepNavVisRange = "{1007, 1070}";
+		};
+	};
+	1D3623240D0F684500981E51 /* MetronomeAppDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1944, 896}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1125}";
+		};
+	};
+	1D6058900D05DD3D006BFB54 /* Metronome */ = {
+		activeExec = 0;
+		executables = (
+			4FD993340FEBF4E4001E59EF /* Metronome */,
+		);
+	};
+	289233A40DB2D0840083E9F9 /* MetronomeView.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {857, 1218}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 898}";
+		};
+	};
+	289233A50DB2D0840083E9F9 /* MetronomeView.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {857, 7000}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{4014, 534}";
+		};
+	};
+	289233A80DB2D0DB0083E9F9 /* MetronomeViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {857, 854}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{2401, 447}";
+		};
+	};
+	289233A90DB2D0DB0083E9F9 /* MetronomeViewController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {768, 1316}}";
+			sepNavSelRange = "{2661, 0}";
+			sepNavVisRange = "{1975, 990}";
+			sepNavWindowFrame = "{{87, 403}, {750, 558}}";
+		};
+	};
+	289233AC0DB2D0DB0083E9F9 /* PreferencesViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {857, 910}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1004}";
+		};
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 4FD993340FEBF4E4001E59EF /* Metronome */;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* Metronome */;
+		codeSenseManager = 4FD9933F0FEBF4EF001E59EF /* Code sense */;
+		executables = (
+			4FD993340FEBF4E4001E59EF /* Metronome */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 267179806;
+			PBXWorkspaceStateSaveDate = 267179806;
+		};
+		sourceControlManager = 4FD9933E0FEBF4EF001E59EF /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	4FD993340FEBF4E4001E59EF /* Metronome */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = Metronome;
+		savedGlobals = {
+		};
+		sourceDirectories = (
+		);
+	};
+	4FD9933E0FEBF4EF001E59EF /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	4FD9933F0FEBF4EF001E59EF /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}
