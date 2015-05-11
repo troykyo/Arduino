@@ -132,14 +132,14 @@ void setup() {
     int noteDuration = random(1,8);
     unsigned int pitch = random(1,4000);
 
-    tone(8, melody[thisNote],noteDuration);
+    tone(14, melody[thisNote],noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:
     int pauseBetweenNotes = noteDuration * 1.30;
     delay(pauseBetweenNotes);
     // stop the tone playing:
-    noTone(8);
+    noTone(14);
   }
 }
 
