@@ -34,21 +34,22 @@ void loop() {
   }
   averageStride = averageStride / numberOfStrides; //calculate the average
   timeStride = thisStride - lastStride;//stide time
-  if ((averageStride*.05) > abs(averageStride-timeStride)){//are we still running great 
-R=0;
-G=0;
-B=255;
-}
-  else if ((averageStride*.1) > abs(averageStride-timeStride)){//are we still running great 
-R=255;
-G=255;
-B=0;
-}
-  else {//are we still running great 
-R=255;
-G=0;
-B=0;
-}
+  if ((averageStride * .05) > abs(averageStride - timeStride)) { //are we still running great
+    R = 0;
+    G = 0;
+    B = 255;
+  }
+  else if ((averageStride * .1) > abs(averageStride - timeStride)) { //are we still running great
+    R = 255;
+    G = 255;
+    B = 0;
+  }
+  else {//are we still running great
+    R = 255;
+    G = 0;
+    B = 0;
+  }
+  colorWipe(strip.Color(R, G, B), 5); // Red
 }
 
 void sensorRead() {
@@ -63,5 +64,13 @@ void sensorRead() {
         strideCounter = 0;
       }
     }
+  }
+}
+
+void colorWipe(uint32_t c, uint8_t wait) {
+  for(uint16_t i=0; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, c);
+      strip.show();
+      delay(wait);
   }
 }
