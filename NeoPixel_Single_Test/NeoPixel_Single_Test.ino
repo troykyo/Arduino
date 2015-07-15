@@ -1,6 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 
-#define PIN 6
+#define PIN 1
 
 int brightness = 0;    // how bright the LED is
 int fadeAmount = 1;    // how many points to fade the LED by
