@@ -1,3 +1,5 @@
+//RISD Summer School at SLEM, Troy Nachtigall
+
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 1
