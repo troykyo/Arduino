@@ -1,4 +1,4 @@
-//RISD Summer School at SLEM, Troy Nachtigall
+//RISD Summer School at SLEM, Troy Nachtigall and Dan
 
 #include <Adafruit_NeoPixel.h>
 
