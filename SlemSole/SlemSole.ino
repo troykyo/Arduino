@@ -59,8 +59,8 @@ void loop() {
  sensorReadingGreen = analogRead(sensorGreen);
  sensorReadingRed = analogRead(sensorRed);
  b = map(sensorReadingBlue, 0, 1023, 255, 0);
- g = map(sensorReadingBlue, 0, 1023, 255, 0);
- r = map(sensorReadingBlue, 0, 1023, 255, 0);
+ g = map(sensorReadingGreen, 0, 1023, 255, 0);
+ r = map(sensorReadingRed, 0, 1023, 255, 0);
 
 
 
