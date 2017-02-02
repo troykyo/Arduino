@@ -78,7 +78,7 @@ void loop()
         server.write (birdA[(n)]);
         Serial.print (birdA[(n)]);
         Serial.print (" ");
-        /*handshake = client.read();//Handshake with client
+        handshake = client.read();//Handshake with client
         Serial.print (handshake);
         if (handshake == 42){
           client.println(24);
@@ -93,7 +93,7 @@ void loop()
           Serial.print ("Array succesfully Master Controler ");
           Serial.print (array2);
           Serial.print (" the value ");
-          Serial.println(birdA[(array2)]);}*/ 
+          Serial.println(birdA[(array2)]);} 
           }
           break;
         }
